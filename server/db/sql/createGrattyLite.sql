@@ -15,7 +15,7 @@ created_at timestamp,
 FOREIGN KEY (follower_id) REFERENCES users(id),
 FOREIGN KEY (followed_id) REFERENCES users(id),
 CONSTRAINT cannot_self_follow CHECK (follower_id <> followed_id),
-CONSTRAINT no_duplicate_follows UNIQUE(follower_id, followed_id);
+CONSTRAINT no_duplicate_follows UNIQUE(follower_id, followed_id)
 );
 
 CREATE TABLE posts(
