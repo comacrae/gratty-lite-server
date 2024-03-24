@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import * as gratitudeListsRoute from "./routes/gratitudeLists.js";
+import * as listItemsRoute from "./routes/listItems.js";
 import "dotenv/config.js";
 
 const app = express();
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/gratitude-lists", gratitudeListsRoute.router);
+app.use("/list-items", listItemsRoute.router);
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;
