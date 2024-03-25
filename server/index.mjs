@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Server listening" });
 });
 
-app.use("/gratitude-lists", gratitudeListsRoute.router);
+app.use("/api", gratitudeListsRoute.router);
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;
