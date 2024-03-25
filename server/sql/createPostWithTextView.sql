@@ -1,0 +1,1 @@
+CREATE VIEW posts_with_text AS SELECT posts.id AS post_id, list_items.id AS item_id, posts.author_id, posts.created_at, list_items.item_text FROM posts INNER JOIN list_items ON posts.id = list_items.post_id;

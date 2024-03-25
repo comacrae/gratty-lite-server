@@ -7,8 +7,15 @@ async function getPagedResults(columns = "*", page = 1, table, where = null) {
   return results;
 }
 
-async function getUnpagedResults(columns = "*", table, where = null) {
-  const query = `SELECT ${columns} FROM ${table} ${where ? where : ""}`;
+async function getUnpagedResults(
+  columns = "*",
+  table,
+  where = null,
+  orderby = null
+) {
+  const query = `SELECT ${columns} FROM ${table} ${where ? where : ""} ${
+    orderby ? orderby : ""
+  }`;
   const results = await makeUnpagedQuery(query);
   return results;
 }
@@ -40,4 +47,4 @@ function getOffset(currentPage = 1, listPerPage) {
   return (currentPage - 1) * [listPerPage];
 }
 
-export { getPagedResults, getUnpagedResults };
+export { getPagedResults, getUnpagedResults, makePagedQuery, makeUnpagedQuery };
