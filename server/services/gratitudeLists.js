@@ -43,10 +43,19 @@ async function getPostsByAuthorSince(minDate, authorId) {
   return results;
 }
 
+function makeListPacket(postId, listItems) {
+  let packet = [];
+  for (const listItem of listItems) {
+    packet.push([postId, listItem]);
+  }
+  return packet;
+}
+
 export {
   getPagedGratitudeLists,
   getPostIdsAndTextByAuthor,
   getPostIdsByAuthor,
   getListTextByAuthorAndPost,
   getPostsByAuthorSince,
+  makeListPacket,
 };

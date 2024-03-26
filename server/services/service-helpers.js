@@ -1,30 +1,24 @@
-import queryDatabase from "./db.js";
+import { queryDatabase } from "./db.js";
 import config from "../config.js";
 
-async function getPagedResults(columns = "*", page = 1, table, where = null) {
-  const query = `SELECT ${columns} FROM ${table} ${where ? where : ""}`;
-  const results = await makePagedQuery(page, query);
-  return results;
+function getTime() {
+  const date = new Date();
+  return (
+    date.toISOString().split("T")[0] + " " + date.toTimeString().split(" ")[0]
+  );
 }
-
-async function getUnpagedResults(
-  columns = "*",
-  table,
-  where = null,
-  orderby = null
-) {
-  const query = `SELECT ${columns} FROM ${table} ${where ? where : ""} ${
-    orderby ? orderby : ""
-  }`;
-  const results = await makeUnpagedQuery(query);
-  return results;
-}
-
-async function makeUnpagedQuery(sqlQuery) {
-  const results = await queryDatabase(sqlQuery);
+async function makeQuery(options) {
+  const results = await queryDatabase(options);
+  console.log(results);
   const data = checkNullRows(results);
   return data;
 }
+
+async function insertData(options) {
+  const queryResults = await queryDatabase(options);
+  return queryResults;
+}
+
 async function makePagedQuery(page = 1, sqlQuery) {
   const offset = getOffset(page, config.listPerPage);
   const results = await queryDatabase(
@@ -47,4 +41,4 @@ function getOffset(currentPage = 1, listPerPage) {
   return (currentPage - 1) * [listPerPage];
 }
 
-export { getPagedResults, getUnpagedResults, makePagedQuery, makeUnpagedQuery };
+export { makePagedQuery, makeQuery, insertData, getTime };
