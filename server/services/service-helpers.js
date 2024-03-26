@@ -7,6 +7,11 @@ function getTime() {
     date.toISOString().split("T")[0] + " " + date.toTimeString().split(" ")[0]
   );
 }
+
+async function deleteData(options) {
+  const results = await queryDatabase(options);
+  return results;
+}
 async function makeQuery(options) {
   const results = await queryDatabase(options);
   console.log(results);
@@ -41,4 +46,4 @@ function getOffset(currentPage = 1, listPerPage) {
   return (currentPage - 1) * [listPerPage];
 }
 
-export { makePagedQuery, makeQuery, insertData, getTime };
+export { makePagedQuery, makeQuery, insertData, getTime, deleteData };

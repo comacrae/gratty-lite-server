@@ -1,10 +1,6 @@
 import * as express from "express";
-import {
-  makePagedQuery,
-  makeQuery,
-  insertData,
-} from "../services/service-helpers.js";
-import { makeListPacket } from "../services/gratitudeLists.js";
+import * as serviceHelpers from "../services/service-helpers.js";
+import * as gratListServices from "../services/gratitudeLists.js";
 const router = express.Router();
 
 router.get("/authors", async function (req, res, next) {
@@ -25,7 +21,7 @@ router.get(
   async function (req, res, next) {
     try {
       const authorId = req.params.authorId;
-      const results = await makeQuery({
+      const results = await serviceHelpers.makeQuery({
         sql: `SELECT id, created_at FROM posts WHERE author_id =${authorId}`,
       });
 
@@ -46,7 +42,7 @@ router.get(
     try {
       const authorId = req.params.authorId;
       const listId = req.params.listId;
-      const results = await makeQuery({
+      const results = await serviceHelpers.makeQuery({
         sql: `SELECT item_id, item_text FROM posts_with_text WHERE author_id =${authorId} AND post_id = ${listId} ORDER BY item_id`,
       });
 
@@ -64,19 +60,17 @@ router.get(
 router.post(
   "/authors/:authorId/gratitude-lists",
   async function (req, res, next) {
-    console.log("callling grat");
     try {
       let result = null;
       const authorId = parseInt(req.params.authorId);
       const listItems = req.body.listItems;
-      result = await insertData({
+      result = await serviceHelpers.insertData({
         sql: `INSERT INTO posts (author_id) VALUES ?`,
         values: [[[authorId]]],
       });
       const resultId = result.insertId;
-      console.log(resultId);
-      const packet = makeListPacket(resultId, listItems);
-      result = await insertData({
+      const packet = gratListServices.makeListPacket(resultId, listItems);
+      result = await serviceHelpers.insertData({
         sql: `INSERT INTO list_items (post_id, item_text) VALUES
         ?`,
         values: [packet],
@@ -86,6 +80,26 @@ router.post(
       console.log(
         `Error in POST '/authors/:authorId/gratitude_lists' for gratitudeLists`,
         err.message
+      );
+      next(err);
+    }
+  }
+);
+
+router.delete(
+  "/authors/:authorId/gratitude-lists/:postId",
+  async function (req, res, next) {
+    try {
+      console.log(req.params);
+      const postId = parseInt(req.params.postId);
+      const authorId = parseInt(req.params.authorId);
+      const result = await serviceHelpers.deleteData({
+        sql: `DELETE FROM posts WHERE id = ${postId} AND author_id = ${authorId}`,
+      });
+      res.status(200).json({ staus: "success", data: result });
+    } catch (err) {
+      console.log(
+        "Error in DELETE /authors/:authorId/gratitude-lists/:postId: "
       );
       next(err);
     }
