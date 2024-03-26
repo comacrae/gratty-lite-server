@@ -12,11 +12,15 @@ async function deleteData(options) {
   const results = await queryDatabase(options);
   return results;
 }
-async function makeQuery(options) {
-  const results = await queryDatabase(options);
-  console.log(results);
+async function makeQuery({ sqlString = null, values = null, options = null }) {
+  const results = await queryDatabase({ sqlString, values, options });
   const data = checkNullRows(results);
   return data;
+}
+
+async function updateData(options) {
+  const results = await queryDatabase(options);
+  return results;
 }
 
 async function insertData(options) {
@@ -46,4 +50,11 @@ function getOffset(currentPage = 1, listPerPage) {
   return (currentPage - 1) * [listPerPage];
 }
 
-export { makePagedQuery, makeQuery, insertData, getTime, deleteData };
+export {
+  makePagedQuery,
+  makeQuery,
+  insertData,
+  getTime,
+  deleteData,
+  updateData,
+};

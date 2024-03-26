@@ -51,6 +51,14 @@ function makeListPacket(postId, listItems) {
   return packet;
 }
 
+function makeUpdatePacket(postId, listItems) {
+  let packet = [];
+  for (const listItem of listItems) {
+    packet.push([listItem.itemText, listItem.itemId, postId]);
+  }
+  return packet;
+}
+
 export {
   getPagedGratitudeLists,
   getPostIdsAndTextByAuthor,
@@ -58,4 +66,5 @@ export {
   getListTextByAuthorAndPost,
   getPostsByAuthorSince,
   makeListPacket,
+  makeUpdatePacket,
 };

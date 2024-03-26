@@ -43,7 +43,7 @@ router.get(
       const authorId = req.params.authorId;
       const listId = req.params.listId;
       const results = await serviceHelpers.makeQuery({
-        sql: `SELECT item_id, item_text FROM posts_with_text WHERE author_id =${authorId} AND post_id = ${listId} ORDER BY item_id`,
+        sql: `SELECT item_id, item_text,author_id FROM posts_with_text WHERE author_id =${authorId} AND post_id = ${listId} ORDER BY item_id`,
       });
 
       res.status(200).json({ status: "success", data: results });
@@ -96,11 +96,33 @@ router.delete(
       const result = await serviceHelpers.deleteData({
         sql: `DELETE FROM posts WHERE id = ${postId} AND author_id = ${authorId}`,
       });
-      res.status(200).json({ staus: "success", data: result });
+      res.status(200).json({ status: "success", data: result });
     } catch (err) {
       console.log(
         "Error in DELETE /authors/:authorId/gratitude-lists/:postId: "
       );
+      next(err);
+    }
+  }
+);
+
+router.put(
+  "/authors/:authorId/gratitude-lists/:postId",
+  async function (req, res, next) {
+    try {
+      const authorId = parseInt(req.params.authorId);
+      const postId = parseInt(req.params.postId);
+      const listItems = req.body.listItems;
+      const packet = gratListServices.makeUpdatePacket(postId, listItems);
+      for (const item of packet) {
+        const result = await serviceHelpers.makeQuery({
+          sqlString: `UPDATE list_items SET item_text = ? WHERE id = ? AND post_id = ?`,
+          values: item,
+        });
+      }
+      res.status(200).json({ status: "success", data: {} });
+    } catch (err) {
+      console.log("Error in PUT /authors/:authorId/gratitude-lists/:postId");
       next(err);
     }
   }
