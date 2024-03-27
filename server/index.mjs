@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
-import * as gratitudeListsRoute from "./routes/gratitudeLists.js";
+import { router as gratitudeListsRoute } from "./routes/gratitudeLists.js";
+import { router as usersRoute } from "./routes/users.js";
+
 import "dotenv/config.js";
 
 const app = express();
@@ -15,7 +17,8 @@ app.get("/", (req, res) => {
   res.json({ message: "Server listening" });
 });
 
-app.use("/api", gratitudeListsRoute.router);
+app.use("/api", gratitudeListsRoute);
+app.use("/api", usersRoute);
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;

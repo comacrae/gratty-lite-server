@@ -90,7 +90,6 @@ router.delete(
   "/authors/:authorId/gratitude-lists/:postId",
   async function (req, res, next) {
     try {
-      console.log(req.params);
       const postId = parseInt(req.params.postId);
       const authorId = parseInt(req.params.authorId);
       const result = await serviceHelpers.deleteData({
