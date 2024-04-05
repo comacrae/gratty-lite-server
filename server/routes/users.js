@@ -1,5 +1,4 @@
 import * as express from "express";
-import * as userHelpers from "../services/users.js";
 import * as serviceHelpers from "../services/service-helpers.js";
 
 const router = express.Router();
@@ -16,7 +15,7 @@ router.get("/users", async function (req, res, next) {
   }
 });
 
-router.get("/users/:userId", async function (req, res, next) {
+router.get("/users/by-id/:userId", async function (req, res, next) {
   try {
     const userId = req.params.userId;
     const result = await serviceHelpers.makeQuery({
@@ -24,7 +23,20 @@ router.get("/users/:userId", async function (req, res, next) {
     });
     res.status(200).json({ status: "success", data: result });
   } catch (err) {
-    console.log("Error in GET /users/:userId ");
+    console.log("Error in GET /users/by-id/:userId ");
+    next(err);
+  }
+});
+
+router.get("/users/by-username/:username", async function (req, res, next) {
+  try {
+    const username = req.params.username;
+    const result = await serviceHelpers.makeQuery({
+      sqlString: `SELECT * FROM users WHERE username = "${username}"`,
+    });
+    return res.status(200).json({ message: "success", data: result });
+  } catch (err) {
+    console.log("Error in '/users/by-username/:username'", err);
     next(err);
   }
 });
@@ -53,7 +65,7 @@ router.delete("/users/:userId", async function (req, res, next) {
     });
     res.status(200).json({ status: "success", data: result });
   } catch (err) {
-    console.log("Error in POST /users ");
+    console.log("Error in DELETE /users ");
     next(err);
   }
 });

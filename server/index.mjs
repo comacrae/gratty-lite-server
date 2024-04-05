@@ -18,9 +18,9 @@ app.get("/", (req, res) => {
   res.json({ message: "Server listening" });
 });
 
-app.use("/api", gratitudeListsRoute);
-app.use("/api", usersRoute);
-app.use("/api", followersRoute);
+app.use("/api/", gratitudeListsRoute);
+app.use("/api/", usersRoute);
+app.use("/api/", followersRoute);
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;
