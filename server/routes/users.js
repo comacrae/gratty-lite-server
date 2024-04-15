@@ -28,13 +28,26 @@ router.get("/users/by-id/:userId", async function (req, res, next) {
   }
 });
 
+router.get("/users/user-id/:username", async function (req, res, next) {
+  const username = req.params.username;
+  try {
+    const result = await serviceHelpers.makeQuery({
+      sqlString: `SELECT id FROM users WHERE username = "${username}"`,
+    });
+    res.status(200).json({ status: "success", data: result });
+  } catch (err) {
+    console.log("Error in GET /users/user-id/:username");
+    next(err);
+  }
+});
+
 router.get("/users/by-username/:username", async function (req, res, next) {
   try {
     const username = req.params.username;
     const result = await serviceHelpers.makeQuery({
       sqlString: `SELECT * FROM users WHERE username = "${username}"`,
     });
-    return res.status(200).json({ message: "success", data: result });
+    return res.status(200).json({ status: "success", data: result });
   } catch (err) {
     console.log("Error in '/users/by-username/:username'", err);
     next(err);
