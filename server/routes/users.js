@@ -43,6 +43,7 @@ router.get("/users/user-id/:username", async function (req, res, next) {
 
 router.get("/users/by-username/:username", async function (req, res, next) {
   try {
+    console.log(username);
     const username = req.params.username;
     const result = await serviceHelpers.makeQuery({
       sqlString: `SELECT * FROM users WHERE username = "${username}"`,

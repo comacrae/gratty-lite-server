@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.get("/authors", async function (req, res, next) {
   try {
-    const results = await makeQuery({
-      sql: "SELECT DISTINCT author_id FROM posts",
+    const results = await serviceHelpers.makeQuery({
+      sqlString: "SELECT DISTINCT author_id FROM posts",
     });
     res.status(200).json({ status: "success", data: results });
   } catch (err) {
@@ -21,8 +21,11 @@ router.get(
   async function (req, res, next) {
     try {
       const authorId = req.params.authorId;
+      if (!authorId) {
+        throw Error("author Id is null");
+      }
       const results = await serviceHelpers.makeQuery({
-        sql: `SELECT id, created_at FROM posts WHERE author_id =${authorId}`,
+        sqlString: `SELECT id, DATE_FORMAT(created_at,'%y-%m-%d') as created_at  FROM posts WHERE author_id =${authorId}`,
       });
 
       res.status(200).json({ status: "success", data: results });
@@ -43,7 +46,7 @@ router.get(
       const authorId = req.params.authorId;
       const listId = req.params.listId;
       const results = await serviceHelpers.makeQuery({
-        sql: `SELECT item_id, item_text,author_id FROM posts_with_text WHERE author_id =${authorId} AND post_id = ${listId} ORDER BY item_id`,
+        sqlString: `SELECT item_id, item_text,author_id FROM posts_with_text WHERE author_id =${authorId} AND post_id = ${listId} ORDER BY item_id`,
       });
 
       res.status(200).json({ status: "success", data: results });
